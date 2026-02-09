@@ -1,0 +1,55 @@
+on:
+ workflow_dispatch:
+
+jobs:
+ job_1:
+  runs-on: ubuntu-latest
+  steps:
+    - name: checkout repository
+      uses: .github/actions/greeting@v1
+      with:
+        name: ahmad
+
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}   
+
+ job_2:
+   runs-on: ubuntu-latest
+   steps:
+   - name: run a command in ubuntu vm
+     run: echo "this run on ubuntu VM"
+  
+   - name: run inside alpine container
+     uses: docker://alpine:3.14
+     with:
+       entrypoint: /bash/sh
+       args: |
+        -c "echo 'this steps run inside alpine contaienr'"
+   - name: run anotehr command in ubnutu vm
+      run: echo "back to OG VM"
+
+ job_3:
+   runs-on: ubuntu-latest
+   container: node:20
+   steps:
+    - run: node --version
+    - run: echo "this is insdie node.js container"   
+
+
+  
+ job_4: 
+  runs-on: ubuntu-latest
+  container:
+    image: ghcr.io/my-org/my-private-image:latest
+
+    credentials:
+       username: ${{ secrets.DOCKER_USERNAME }}
+       password: ${{ secrets.DOCKER_PASSWORD }}
+  steps:
+
+    - run: node --version
+    - run: echo "This whole job runs inside a Node.js container"      
+
+
+
+        
