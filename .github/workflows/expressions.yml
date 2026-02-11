@@ -1,0 +1,23 @@
+on:
+  workflow_dispatch:
+jobs:
+  expressions:
+    runs-on: ubuntu-latest
+    steps:
+    - name: print a message
+      run: echo "the jobs is running"
+      if: ${{ github.even_name ==  'push' || github.ref == 'refs/head/main' }}
+      #if: ${{github.even_name !=  'push'}}
+      #if: ${{ !contains(github.event.head_commit.message, 'WIP') }}
+      #if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+
+    - name: run a deployment script
+      run: ./deploy.sh
+
+    - name: cleanup on failure
+      run: echo "cleaning up"
+      if: failure()
+      #if: success()
+      # always() ->always runs regardless of the previous step result
+      #cancelled() ->
+
